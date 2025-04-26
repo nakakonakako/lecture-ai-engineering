@@ -10,7 +10,7 @@ from transformers import pipeline
 from config import MODEL_NAME
 
 # --- アプリケーション設定 ---
-st.set_page_config(page_title="MiniChat Chatbot", layout="wide")
+st.set_page_config(page_title="SmolVLM Chatbot", layout="wide")
 
 # --- 初期化処理 ---
 # NLTKデータのダウンロード（初回起動時など）
@@ -43,7 +43,6 @@ def load_model():
         st.error("GPUメモリ不足の可能性があります。不要なプロセスを終了するか、より小さいモデルの使用を検討してください。")
         return None
 pipe = llm.load_model()
-
 
 # --- Streamlit アプリケーション ---
 st.title("🤖 ~~GEMMA~~ SmolVLM Chatbot with Feedback")
