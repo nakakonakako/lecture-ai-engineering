@@ -187,7 +187,7 @@ class ModelTester:
     def save_model(model, path="models/titanic_model.pkl"):
         model_dir = "models"
         os.makedirs(model_dir, exist_ok=True)
-        model_path = os.path.join(model_dir, f"titanic_model.pkl")
+        model_path = os.path.join(model_dir, "titanic_model.pkl")
         with open(model_path, "wb") as f:
             pickle.dump(model, f)
         return path
@@ -203,6 +203,10 @@ class ModelTester:
     def compare_with_baseline(current_metrics, baseline_threshold=0.75):
         """ベースラインと比較する"""
         return current_metrics["accuracy"] >= baseline_threshold
+
+    def compare_with_speed_baseline(current_metrics, baseline_threshold=0.01):
+        """ベースラインと比較する"""
+        return current_metrics["inference_time"] <= baseline_threshold
 
 
 # テスト関数（pytestで実行可能）
@@ -244,7 +248,7 @@ def test_model_performance():
     ), f"モデル性能がベースラインを下回っています: {metrics['accuracy']}"
 
     # 推論時間の確認
-    assert (
+    assert ModelTester.compare_with_speed_baseline(
         metrics["inference_time"] < 1.0
     ), f"推論時間が長すぎます: {metrics['inference_time']}秒"
 
@@ -286,3 +290,6 @@ if __name__ == "__main__":
     # ベースラインとの比較
     baseline_ok = ModelTester.compare_with_baseline(metrics)
     print(f"ベースライン比較: {'合格' if baseline_ok else '不合格'}")
+
+    speed_baseline_ok = ModelTester.compare_with_speed_baseline(metrics)
+    print(f"速度ベースライン比較: {'合格' if speed_baseline_ok else '不合格'}")
